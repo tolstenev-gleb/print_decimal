@@ -16,7 +16,7 @@ $(LIB_NAME): $(OBJ)
 	ar rcs $@ $<
 
 $(OBJ): $(SRC)
-	mkdir obj
+	mkdir -p obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
 demo: $(DEMO_SRC) $(LIB_NAME)

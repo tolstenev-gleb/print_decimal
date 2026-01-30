@@ -31,7 +31,7 @@ unsigned get_bit_int(unsigned value, unsigned index);
 void set_bit_int(unsigned *ptr_int, unsigned index, unsigned bit);
 void print_binary_int(unsigned value);
 void print_index_32(void);
-void print_bit_int(unsigned value);
+void print_bit_int(int value);
 
 void print_bit_float(float value);
 

@@ -1,11 +1,5 @@
-/* Copyright (c) 2025 Tolstenev Gleb */
-
-/*
- * demo.c | The use of print_decimal.h
- */
-
 #include <stdio.h>
-
+#include <limits.h>
 #include "../src/print_decimal.h"
 
 int main() {
