@@ -1,2 +1,16 @@
 # print_decimal
-This is set of functions to represent the s21_decimal numbers
+Набор функций для отображения чисел типа s21_decimal
+
+# Как пользоваться
+
+Откройте терминал и вставьте команду:
+```
+git clone git@github.com:tolstenev-gleb/print_decimal.git
+cd print_decimal
+make
+```
+
+Чтобы увидеть демонстрацию функций библиотеки, введите
+```
+make demo
+```
