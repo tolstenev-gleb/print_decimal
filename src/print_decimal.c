@@ -1,11 +1,9 @@
-/* Copyright (c) 2025 Tolstenev Gleb */
+/* Copyright (c) 2026 Tolstenev Gleb */
 
 #include "print_decimal.h"
 
-#include <limits.h>
-
 /*
- * print_decimal.c | The set of functions to represent the s21_decimal numbers
+ * print_decimal.c | Набор функций для отображения чисел типа s21_decimal
  */
 
 /**

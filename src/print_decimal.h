@@ -1,7 +1,7 @@
-/* Copyright (c) 2025 Tolstenev Gleb */
+/* Copyright (c) 2026 Tolstenev Gleb */
 
 /*
- * print_decimal.h | The set of functions to represent the s21_decimal numbers
+ * print_decimal.h | Набор функций для отображения чисел типа s21_decimal
  */
 
 #ifndef PRINT_DECIMAL_H
@@ -10,6 +10,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
+
+#ifndef S21_STRUCT_DECIMAL_H
+#define S21_STRUCT_DECIMAL_H
 
 /**
  * Тип s21_decimal для хранения чисел с плавающей точкой
@@ -18,6 +22,8 @@
 typedef struct {
   unsigned int bits[4];
 } s21_decimal;
+
+#endif  // S21_STRUCT_DECIMAL_H
 
 /**
  * Хранит десятичное представление мантиссы числа s21_decimal
