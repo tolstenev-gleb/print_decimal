@@ -1,5 +1,5 @@
 CC			:= gcc
-CFLAGS		:= -std=c11 -pedantic -Wall -Wextra -Werror
+CFLAGS	:= -std=c11 -pedantic -Wall -Wextra -Werror
 
 NAME 		:= print_decimal
 SRC 		:= ./src/$(NAME).c
@@ -7,8 +7,8 @@ OBJ 		:= ./obj/$(NAME).o
 
 LIB_NAME	:= libprint_decimal.a
 
-DEMO_EXEC	:= demo.out
-DEMO_SRC 	:= ./demo/demo.c
+DEMO_EXEC	:= demo
+DEMO_SRC 	:= demo.c
 
 all: $(LIB_NAME)
 
@@ -20,8 +20,8 @@ $(OBJ): $(SRC)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 demo: $(DEMO_SRC) $(LIB_NAME)
-	$(CC) $(CFLAGS) $^ -o $(DEMO_EXEC)
-	./$(DEMO_EXEC)
+	$(CC) $^ -o $@
+	./$@
 
 clean:
 	rm -rf $(DEMO_EXEC) $(LIB_NAME) obj/ 
