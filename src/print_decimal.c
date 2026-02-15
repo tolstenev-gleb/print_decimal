@@ -201,7 +201,7 @@ void set_scale_decimal(s21_decimal* ptr_decimal, unsigned scale) {
 
 /**
  * Печатает биты, содержащиеся в s21_decimal в подробном виде
- * @param number
+ * @param decimal
  */
 void print_bit_decimal(s21_decimal decimal) {
   char char_sign = (get_sign_decimal(decimal)) ? '-' : '+';
@@ -224,35 +224,35 @@ void print_bit_decimal(s21_decimal decimal) {
 }
 
 /**
- * Переводит строку, содержащее число в бинароном виде, в s21_decimal
- * @param binstr - строка содержащая число в бинарном виде "10101",
- *                 длиной до 128 символов
- * @param dst - указатель на s21_decimal
- * @return 1 - некорректная строка; 0 - ОК
+ * Переводит строку, содержащее число в бинарном виде, в s21_decimal
+ * @param binstr строка содержащая число в бинарном виде "10101",
+ *               длиной до 128 символов
+ * @param ptr_decimal указатель на s21_decimal
+ * @return true - успешное преобразование; false - некорректная строка
  */
-int binstr_to_decimal(char* binstr, s21_decimal* dst) {
-  int error = 0;
+bool binstr_to_decimal(const char* binstr, s21_decimal* ptr_decimal) {
+  bool error = false;
   int n = strlen(binstr) - 1, c = n + 1, i = 0;
 
-  dst->bits[0] = 0;
-  dst->bits[1] = 0;
-  dst->bits[2] = 0;
-  dst->bits[3] = 0;
+  ptr_decimal->bits[0] = 0;
+  ptr_decimal->bits[1] = 0;
+  ptr_decimal->bits[2] = 0;
+  ptr_decimal->bits[3] = 0;
 
   if (n > 128) {
-    error = 1;
+    error = true;
   } else {
     for (; n >= 0; n--, i++) {
       if (binstr[n] == '0') {
-        set_bit_decimal(dst, i, 0);
+        set_bit_decimal(ptr_decimal, i, 0);
       } else if (binstr[n] == '1') {
-        set_bit_decimal(dst, i, 1);
+        set_bit_decimal(ptr_decimal, i, 1);
       } else {
         error = 1;
       }
     }
     for (; c < 128; ++c) {
-      set_bit_decimal(dst, c, 0);
+      set_bit_decimal(ptr_decimal, c, 0);
     }
   }
   return error;
@@ -358,3 +358,13 @@ void print_decimal(s21_decimal decimal) {
   }
   printf("\n");
 }
+
+/**
+ * @brief Преобразует строку, содержащее число в десятичном виде,
+ * в s21_decimal
+ * @param str строка, содержащее число в виде "-21.42"
+ * @param ptr_decimal указатель на s21_decimal,
+ * в который будет записан результат преобразования
+ * @return true - успешное преобразование; false - некорректная строка
+ */
+// bool str_to_decimal(const char* str, s21_decimal* ptr_dst) {}

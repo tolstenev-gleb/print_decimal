@@ -52,7 +52,8 @@ void print_index_128(void);
 void print_bit_decimal(s21_decimal decimal);
 void print_decimal_init_signed(s21_decimal decimal);
 void print_decimal_init_unsigned(s21_decimal decimal);
-int binstr_to_decimal(char *binstr, s21_decimal *dst);
+bool binstr_to_decimal(const char *binstr, s21_decimal *ptr_decimal);
+bool str_to_decimal(const char *str, s21_decimal *ptr_decimal);
 
 void add_1_to_digits(decimal_digits *ptr_digits);
 void multiply_digits_by_2(decimal_digits *ptr_digits);
