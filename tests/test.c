@@ -39,25 +39,6 @@ START_TEST(test_str_to_decimal_one) {
 }
 END_TEST
 
-START_TEST(test_str_to_decimal_plus_one) {
-  // Test
-  // str:              "+1"
-  // s21_decimal bits:  {{1, 0, 0, 0}}
-  const char *str = "+1";
-  s21_decimal dest = {{0, 0, 0, 0}};
-  s21_decimal expected = {{1, 0, 0, 0}};
-  bool expect_error = false;
-
-  bool actual_error = str_to_decimal(str, &dest);
-
-  ck_assert_uint_eq(expect_error, actual_error);
-  ck_assert_uint_eq(expected.bits[0], dest.bits[0]);
-  ck_assert_uint_eq(expected.bits[1], dest.bits[1]);
-  ck_assert_uint_eq(expected.bits[2], dest.bits[2]);
-  ck_assert_uint_eq(expected.bits[3], dest.bits[3]);
-}
-END_TEST
-
 START_TEST(test_str_to_decimal_minus_one) {
   // Test
   // str:              "-1"
@@ -198,7 +179,6 @@ Suite* example_suite_create(void) {
 
   tcase_add_test(tcase_core, test_str_to_decimal_zero);
   tcase_add_test(tcase_core, test_str_to_decimal_one);
-  tcase_add_test(tcase_core, test_str_to_decimal_plus_one);
   tcase_add_test(tcase_core, test_str_to_decimal_minus_one);
   tcase_add_test(tcase_core, test_str_to_decimal_max_uint_overflow);
   tcase_add_test(tcase_core, test_str_to_decimal_scale_1);

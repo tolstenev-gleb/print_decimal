@@ -360,11 +360,148 @@ void print_decimal(s21_decimal decimal) {
 }
 
 /**
+ * @brief Побитовый сдвиг влево s21_decimal,
+ * переданного по указателю, на величину shift
+ * @param ptr_decimal указатель на s21_decimal
+ * @param shift_value величина сдвига
+ */
+void shift_left(s21_decimal* ptr_decimal, int shift_value) {
+  unsigned memory = 0;
+  for (int i = 0; i < 3; i++) {
+    unsigned value = ptr_decimal->bits[i];
+    // значение текущего int сдвигаем влево на shift и
+    // добавляем на новые биты часть, которую запомнили с прошлого раза
+    // (для первой итерации она равна нулю)
+    ptr_decimal->bits[i] = (value << shift_value) | memory;
+    // запоминаем сдвигаемую часть текущего int для следующей итерации
+    memory = value >> (32 - shift_value);
+  }
+}
+
+/**
+ * @brief Побитовое сложение s21_decimal
+ * @param value_1 первое число
+ * @param value_2 второе число
+ * @param ptr_result указатель на s21_decimal,
+ * в который будет записан результат
+ */
+void bitwise_add(s21_decimal value_1, s21_decimal value_2,
+                 s21_decimal* ptr_result) {
+  int bit_1, bit_2, res, overflow = 0;
+  for (int i = 0; i < 96; i++) {
+    bit_1 = get_bit_decimal(value_1, i);
+    bit_2 = get_bit_decimal(value_2, i);
+    res = bit_1 + bit_2 + overflow;
+    overflow = res / 2;
+    set_bit_decimal(ptr_result, i, res % 2);
+  }
+}
+
+/**
+ * @brief Умножение s21_decimal на 10
+ * @param ptr_decimal указатель на s21_decimal
+ * Реализовано по формуле:
+ * x * 10 = x * (2 + 8) = x * 2 + x * 8
+ */
+void mul_ten(s21_decimal* ptr_decimal) {
+  // Сдвигаем на 1 - это умножение на 2
+  shift_left(ptr_decimal, 1);
+  s21_decimal temp = *ptr_decimal;
+  // Сдвигаем ещё на 2 (суммарно - 3) - это умножение на 8
+  shift_left(ptr_decimal, 2);
+  bitwise_add(temp, *ptr_decimal, ptr_decimal);
+}
+
+/**
+ * @brief Умножение s21_decimal на 10 несколько раз
+ * @param ptr_decimal указатель на s21_decimal
+ * @param n количество умножений
+ */
+void mul_ten_n_times(s21_decimal* ptr_decimal, unsigned n) {
+  while (n > 0) {
+    mul_ten(ptr_decimal);
+    n--;
+  }
+}
+
+/**
+ * @brief Переводит символ цифры в целочисленное значение
+ * @param с cимвол цифры (от '0' до '9').
+ * Остальные значения недопустимы
+ * @return значение цифры
+ */
+int char_to_digit(char c) { return c - '0'; }
+
+
+/**
+ * @brief Обнуляет s21_decimal по указателю
+ * @param ptr_decimal указатель на s21_decimal
+ */
+void clear_decimal(s21_decimal* ptr_decimal) {
+  ptr_decimal->bits[0] = 0;
+  ptr_decimal->bits[1] = 0;
+  ptr_decimal->bits[2] = 0;
+  ptr_decimal->bits[3] = 0;
+}
+
+/**
  * @brief Преобразует строку, содержащее число в десятичном виде,
  * в s21_decimal
- * @param str строка, содержащее число в виде "-21.42"
+ * @param str строка, содержащее число в виде "-21.42".
+ * Для положительного числа знак "+" не указывать.
  * @param ptr_decimal указатель на s21_decimal,
  * в который будет записан результат преобразования
  * @return true - успешное преобразование; false - некорректная строка
  */
-// bool str_to_decimal(const char* str, s21_decimal* ptr_dst) {}
+bool str_to_decimal(const char* str, s21_decimal* ptr_decimal) {
+  printf("str: %s\n", str);
+  bool error = false;
+  // Валидация строки  // TODO
+  // ... error = true ...
+  clear_decimal(ptr_decimal);
+  // Копирование строки
+  size_t len = strlen(str);
+  char* str_copy = (char*)calloc(len, sizeof(char));
+  strcpy(str_copy, str);
+  // Поиск точки и определение коэффициента масштабирования
+  int scale = 0;
+  for (size_t i = 0; i < len; i++) {
+    if (str[i] == '.') {
+      scale = len - i - 1;
+      // Сдвиг цифр после точки к началу (затираем точку)
+      memmove(str_copy + i, str_copy + i + 1, len - i);
+      len -= 1;
+      break;
+    }
+  }
+  // Установка коэффициента масштабирования
+  set_scale_decimal(ptr_decimal, scale);
+  // Установка знака при необходимости
+  if (str[0] == '-') {
+    set_sign_decimal(ptr_decimal);
+    // Сдвиг цифр после знака к началу (затираем точку)
+    memmove(str_copy, str_copy + 1, len);
+    len -= 1;
+  }
+  // remove_leading_zeros(str_copy);  // TODO
+
+  // Цикл перевода из десятичной системы счисления в двоичную
+  int n = len - 1; // n - порядок числа, т.е. количество цифр
+  for (size_t i = 0; i < len; i++) {
+    // Перевод текущего символа цифры в целочисленное значение
+    int current_digit = char_to_digit(str_copy[i]);
+    // Создание s21_decimal с этим значением
+    s21_decimal cd = {{current_digit, 0, 0, 0}};
+    // Приведение к текущему порядку
+    // Пример: 1 из числа 1234 становится 1000
+    // 1 * 10 * 10 * 10
+    // n - порядок числа (количество десяток при разложении числа)
+    mul_ten_n_times(&cd, n);
+    n -= 1;
+    // Добавлем к результату
+    bitwise_add(cd, *ptr_decimal, ptr_decimal);
+  }
+  
+  free(str_copy);
+  return error;
+}

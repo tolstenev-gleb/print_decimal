@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
+#include <stdlib.h>
 
 #ifndef S21_STRUCT_DECIMAL_H
 #define S21_STRUCT_DECIMAL_H
@@ -48,6 +49,7 @@ void set_bit_decimal(s21_decimal *ptr_decimal, unsigned index, unsigned bit);
 void set_sign_decimal(s21_decimal *ptr_decimal);
 void set_scale_decimal(s21_decimal *ptr_decimal, unsigned scale);
 void clear_sign_decimal(s21_decimal *ptr_decimal);
+void clear_decimal(s21_decimal* ptr_decimal);
 void print_index_128(void);
 void print_bit_decimal(s21_decimal decimal);
 void print_decimal_init_signed(s21_decimal decimal);
@@ -58,6 +60,15 @@ bool str_to_decimal(const char *str, s21_decimal *ptr_decimal);
 void add_1_to_digits(decimal_digits *ptr_digits);
 void multiply_digits_by_2(decimal_digits *ptr_digits);
 void clear_decimal_digits(decimal_digits *ptr_digits);
+
 void print_decimal(s21_decimal decimal);
+
+void shift_left(s21_decimal* ptr_decimal, int shift_value);
+void bitwise_add(s21_decimal value_1, s21_decimal value_2,
+                 s21_decimal* ptr_result);
+void mul_ten(s21_decimal* ptr_decimal);
+void mul_ten_n_times(s21_decimal* ptr_decimal, unsigned n);
+int char_to_digit(char c);
+
 
 #endif  // PRINT_DECIMAL_H
