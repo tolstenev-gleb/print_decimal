@@ -432,7 +432,6 @@ void mul_ten_n_times(s21_decimal* ptr_decimal, unsigned n) {
  */
 int char_to_digit(char c) { return c - '0'; }
 
-
 /**
  * @brief Обнуляет s21_decimal по указателю
  * @param ptr_decimal указатель на s21_decimal
@@ -486,7 +485,7 @@ bool str_to_decimal(const char* str, s21_decimal* ptr_decimal) {
   // remove_leading_zeros(str_copy);  // TODO
 
   // Цикл перевода из десятичной системы счисления в двоичную
-  int n = len - 1; // n - порядок числа, т.е. количество цифр
+  int n = len - 1;  // n - порядок числа, т.е. количество цифр
   for (size_t i = 0; i < len; i++) {
     // Перевод текущего символа цифры в целочисленное значение
     int current_digit = char_to_digit(str_copy[i]);
@@ -501,7 +500,7 @@ bool str_to_decimal(const char* str, s21_decimal* ptr_decimal) {
     // Добавлем к результату
     bitwise_add(cd, *ptr_decimal, ptr_decimal);
   }
-  
+
   free(str_copy);
   return error;
 }

@@ -2,3 +2,5 @@
 *.a
 *.o
 ./obj/*
+demo
+test
